@@ -18,3 +18,9 @@ function versionResponse (req, res) {
 
 module.exports = () => versionResponse
 
+if (!module.parent) {
+  lastCommit()
+    .then(console.log)
+    .catch(console.error)
+}
+
