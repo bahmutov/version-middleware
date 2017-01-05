@@ -1,7 +1,7 @@
 {
   "name": "version-middleware",
   "description": "Express.js middleware that returns NPM version and Git SHA",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "bugs": "https://github.com/bahmutov/version-middleware/issues",
   "config": {
@@ -58,17 +58,21 @@
     "secure": "nsp check",
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
     "test": "npm run unit",
-    "unit": "mocha src/*-spec.js"
+    "unit": "mocha src/*-spec.js",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "devDependencies": {
     "ban-sensitive-files": "1.8.4",
+    "check-more-types": "2.23.0",
     "dependency-check": "2.7.0",
     "deps-ok": "1.2.0",
     "git-issues": "1.3.1",
+    "lazy-ass": "1.5.0",
     "license-checker": "8.0.3",
     "mocha": "3.2.0",
     "nsp": "2.6.2",
     "pre-git": "3.12.0",
+    "semantic-release": "^6.3.2",
     "standard": "8.6.0"
   },
   "dependencies": {
