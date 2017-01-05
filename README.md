@@ -8,6 +8,16 @@
 [![semantic-release][semantic-image] ][semantic-url]
 [![js-standard-style][standard-image]][standard-url]
 
+## Use
+
+`npm install --save version-middleware`
+
+```js
+app.use(require('version-middleware')())
+```
+
+Then `GET /version`, returns JSON with `{"version": "...", "git": "short SHA"}`
+
 ## Related
 
 * [koa-version-header](https://github.com/bahmutov/koa-version-header)
