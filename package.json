@@ -70,5 +70,8 @@
     "nsp": "2.6.2",
     "pre-git": "3.12.0",
     "standard": "8.6.0"
+  },
+  "dependencies": {
+    "last-commit": "0.3.1"
   }
 }
