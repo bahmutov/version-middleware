@@ -13,7 +13,8 @@
 `npm install --save version-middleware`
 
 ```js
-app.use(require('version-middleware')())
+const version = require('version-middleware')
+app.get('/version', version())
 ```
 
 Then `GET /version`, returns JSON with `{"version": "...", "git": "short SHA"}`
