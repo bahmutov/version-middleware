@@ -18,9 +18,17 @@ app.use(require('version-middleware')())
 
 Then `GET /version`, returns JSON with `{"version": "...", "git": "short SHA"}`
 
+## Built version file
+
+You can save build information during CI test run using
+[built-version](https://github.com/bahmutov/built-version) into file
+`build.json`. If this file is found, it will be used instead of getting Git
+sha and reading version from the `package.json` file.
+
 ## Related
 
 * [koa-version-header](https://github.com/bahmutov/koa-version-header)
+* [built-version](https://github.com/bahmutov/built-version)
 
 ### Small print
 

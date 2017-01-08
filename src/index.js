@@ -1,25 +1,38 @@
 'use strict'
 
-const lastCommit = require('last-commit')
 const join = require('path').join
-// assuming package.json is in the same folder
-const packageFilename = join(process.cwd(), 'package.json')
-const pkg = require(packageFilename)
+const exists = require('fs').existsSync
 
-const combineShaAndVersion = git =>
-  ({version: pkg.version, git})
+function findBuiltInfo () {
+  // assuming package.json is in the same folder
+  const lastCommit = require('last-commit')
+  const packageFilename = join(process.cwd(), 'package.json')
+  const pkg = require(packageFilename)
+  const combineShaAndVersion = git =>
+    ({version: pkg.version, git})
+
+  return lastCommit()
+    .then(combineShaAndVersion)
+}
+
+const buildFilename = join(process.cwd(), 'build.json')
+
+function loadBuildFile () {
+  const data = require(buildFilename)
+  return Promise.resolve(data)
+}
+
+const getBuiltInfo = exists(buildFilename) ? loadBuildFile : findBuiltInfo
 
 function versionResponse (req, res) {
   const sendResult = res.send.bind(res)
-  lastCommit()
-    .then(combineShaAndVersion)
-    .then(sendResult)
+  getBuiltInfo().then(sendResult)
 }
 
 module.exports = () => versionResponse
 
 if (!module.parent) {
-  lastCommit()
+  getBuiltInfo()
     .then(console.log)
     .catch(console.error)
 }
