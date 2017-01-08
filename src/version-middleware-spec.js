@@ -22,7 +22,7 @@ describe('version-middleware', () => {
       send: data => {
         la(is.object(data), 'expected data')
         la(is.unemptyString(data.version), 'missing version', data)
-        la(is.shortCommitId(data.git), 'missing git', data)
+        la(is.shortCommitId(data.git), 'invalid git property', data)
         done()
       }
     }

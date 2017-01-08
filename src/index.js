@@ -2,6 +2,8 @@
 
 const join = require('path').join
 const exists = require('fs').existsSync
+const la = require('lazy-ass')
+const is = require('check-more-types')
 
 function findBuiltInfo () {
   // assuming package.json is in the same folder
@@ -19,7 +21,15 @@ const buildFilename = join(process.cwd(), 'build.json')
 
 function loadBuildFile () {
   const data = require(buildFilename)
-  return Promise.resolve(data)
+  la(is.unemptyString(data.version),
+    buildFilename, 'is missing "version" property', data)
+  la(is.commitId(data.id),
+    buildFilename, 'is missing "id" property with Git sha', data)
+  const renamed = {
+    version: data.version,
+    git: data.id.trim().substr(0, 7)
+  }
+  return Promise.resolve(renamed)
 }
 
 const getBuiltInfo = exists(buildFilename) ? loadBuildFile : findBuiltInfo
