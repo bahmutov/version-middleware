@@ -4,6 +4,7 @@ const join = require('path').join
 const exists = require('fs').existsSync
 const la = require('lazy-ass')
 const is = require('check-more-types')
+const started = (new Date()).toISOString()
 
 function findBuiltInfo () {
   // assuming package.json is in the same folder
@@ -34,9 +35,16 @@ function loadBuildFile () {
 
 const getBuiltInfo = exists(buildFilename) ? loadBuildFile : findBuiltInfo
 
+function addStarted (info) {
+  info.started = started
+  return info
+}
+
 function versionResponse (req, res) {
   const sendResult = res.send.bind(res)
-  getBuiltInfo().then(sendResult)
+  getBuiltInfo()
+    .then(addStarted)
+    .then(sendResult)
 }
 
 module.exports = () => versionResponse

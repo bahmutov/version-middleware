@@ -17,7 +17,15 @@ const version = require('version-middleware')
 app.get('/version', version())
 ```
 
-Then `GET /version`, returns JSON with `{"version": "...", "git": "short SHA"}`
+Then `GET /version`, returns JSON with
+
+```json
+{
+  "version": "...",
+  "git": "short SHA",
+  "started": "Date ISO string"
+}
+`
 
 ## Built version file
 
