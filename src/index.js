@@ -46,4 +46,3 @@ if (!module.parent) {
     .then(console.log)
     .catch(console.error)
 }
-
