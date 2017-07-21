@@ -25,7 +25,7 @@ Then `GET /version`, returns JSON with
   "git": "short SHA",
   "started": "Date ISO string"
 }
-`
+```
 
 ## Built version file
 
