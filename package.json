@@ -73,7 +73,7 @@
     "next-update-travis": "1.5.2",
     "nsp": "2.6.3",
     "pre-git": "3.15.0",
-    "semantic-release": "6.3.6",
+    "semantic-release": "^6.3.6",
     "standard": "10.0.2"
   },
   "dependencies": {
