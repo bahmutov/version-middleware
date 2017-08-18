@@ -40,11 +40,22 @@ function addStarted (info) {
   return info
 }
 
-function versionResponse (req, res) {
-  const sendResult = res.send.bind(res)
-  getBuiltInfo()
+function sendVersionResponse (sendResult) {
+  la(is.fn(sendResult), 'send result is not a function', sendResult)
+  return getBuiltInfo()
     .then(addStarted)
     .then(sendResult)
+}
+
+const isSendArgument = (args) =>
+  args.length === 1 && is.fn(args[0])
+
+function versionResponse (req, res) {
+  if (isSendArgument(arguments)) {
+    return sendVersionResponse(req)
+  }
+  const sendResult = res.send.bind(res)
+  return sendVersionResponse(sendResult)
 }
 
 module.exports = () => versionResponse

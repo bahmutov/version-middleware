@@ -27,6 +27,23 @@ Then `GET /version`, returns JSON with
 }
 ```
 
+### Pass send
+
+If you do not want to assume `res.send` function, you can pass send function
+to be called with results. For example when using
+[micro](https://github.com/zeit/micro#readme) server you send result using
+`send` function.
+
+```js
+const {send} = require('micro')
+const version = require('version-middleware')()
+micro(async(req, res) => {
+  version(info => {
+    send(res, info)
+  })
+})
+```
+
 ## Built version file
 
 You can save build information during CI test run using

@@ -49,4 +49,18 @@ describe('version-middleware', () => {
     }
     version(null, response)
   })
+
+  it('can call supplied send version instead of using response', (done) => {
+    let result
+    const send = (info) => {
+      result = info
+    }
+    const version = middleware()
+    version(send).then(() => {
+      la(result, 'result is undefined')
+      la(result.version, 'missing version', result)
+      la(result.git, 'missing short git', result)
+      done()
+    })
+  })
 })
