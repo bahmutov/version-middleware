@@ -2,8 +2,13 @@
 
 const la = require('lazy-ass')
 const is = require('check-more-types')
+const sinon = require('sinon')
+const {join} = require('path')
+const fs = require('fs')
+const R = require('ramda')
+const snapshot = require('snap-shot-it')
 
-/* global describe, it */
+/* eslint-env mocha */
 describe('version-middleware', () => {
   const middleware = require('.')
 
@@ -61,6 +66,40 @@ describe('version-middleware', () => {
       la(result.version, 'missing version', result)
       la(result.git, 'missing short git', result)
       done()
+    })
+  })
+
+  describe('using build.json', () => {
+    const sandbox = sinon.sandbox.create()
+    const buildFilename = join(process.cwd(), 'build.json')
+    const build = {
+      version: '1.2.3',
+      id: '330556f921702ddf207f6e2fa932e3fe5d08fb38'
+    }
+
+    beforeEach(() => {
+      sandbox.stub(fs, 'existsSync').withArgs(buildFilename).returns(true)
+      sandbox.stub(fs, 'readFileSync').withArgs(buildFilename, 'utf8').returns(JSON.stringify(build))
+    })
+
+    it('loads extra stuff from build.json', (done) => {
+      let result
+      // normalize transient properties
+      const normalize = R.evolve({
+        started: (s) => s.replace(/./g, 'x')
+      })
+      const send = (info) => {
+        result = normalize(info)
+      }
+      const version = middleware()
+      version(send).then(() => {
+        snapshot(result)
+        done()
+      })
+    })
+
+    afterEach(() => {
+      sandbox.restore()
     })
   })
 })

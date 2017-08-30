@@ -1,7 +1,7 @@
 'use strict'
 
 const join = require('path').join
-const exists = require('fs').existsSync
+const fs = require('fs')
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const started = (new Date()).toISOString()
@@ -21,7 +21,7 @@ function findBuiltInfo () {
 const buildFilename = join(process.cwd(), 'build.json')
 
 function loadBuildFile () {
-  const data = require(buildFilename)
+  const data = JSON.parse(fs.readFileSync(buildFilename, 'utf8'))
   la(is.unemptyString(data.version),
     buildFilename, 'is missing "version" property', data)
   la(is.commitId(data.id),
@@ -30,10 +30,17 @@ function loadBuildFile () {
     version: data.version,
     git: data.id.trim().substr(0, 7)
   }
-  return Promise.resolve(renamed)
+  const full = Object.assign({}, renamed, data)
+  return Promise.resolve(full)
 }
 
-const getBuiltInfo = exists(buildFilename) ? loadBuildFile : findBuiltInfo
+function loadBuildInfoFn (filename) {
+  if (fs.existsSync(filename)) {
+    return loadBuildFile
+  } else {
+    return findBuiltInfo
+  }
+}
 
 function addStarted (info) {
   info.started = started
@@ -42,6 +49,7 @@ function addStarted (info) {
 
 function sendVersionResponse (sendResult) {
   la(is.fn(sendResult), 'send result is not a function', sendResult)
+  const getBuiltInfo = loadBuildInfoFn(buildFilename)
   return getBuiltInfo()
     .then(addStarted)
     .then(sendResult)
@@ -61,6 +69,7 @@ function versionResponse (req, res) {
 module.exports = () => versionResponse
 
 if (!module.parent) {
+  const getBuiltInfo = loadBuildInfoFn(buildFilename)
   getBuiltInfo()
     .then(console.log)
     .catch(console.error)

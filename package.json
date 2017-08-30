@@ -73,7 +73,10 @@
     "next-update-travis": "1.7.1",
     "nsp": "2.7.0",
     "pre-git": "3.15.3",
+    "ramda": "0.24.1",
     "semantic-release": "^6.3.6",
+    "sinon": "3.2.1",
+    "snap-shot-it": "2.2.0",
     "standard": "10.0.3"
   },
   "dependencies": {
