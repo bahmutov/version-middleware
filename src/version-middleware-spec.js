@@ -100,6 +100,7 @@ describe('version-middleware', () => {
       }
       const version = middleware()
       version(send).then(() => {
+        sandbox.restore()
         snapshot(result)
         done()
       })
