@@ -27,6 +27,13 @@ Then `GET /version`, returns JSON with
 }
 ```
 
+The returned JSON data will have `cache-control` header that prevents any caching on the
+client
+
+```
+cache-control: max-age=0, no-cache, no-store, no-transform, must-revalidate
+```
+
 ### Pass send
 
 If you do not want to assume `res.send` function, you can pass send function

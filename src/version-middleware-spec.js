@@ -8,6 +8,13 @@ const fs = require('fs')
 const R = require('ramda')
 const snapshot = require('snap-shot-it')
 
+// normalize transient properties
+const xxx = s => s.replace(/./g, 'x')
+const normalize = R.evolve({
+  started: xxx,
+  git: xxx
+})
+
 /* eslint-env mocha */
 describe('version-middleware', () => {
   const middleware = require('.')
@@ -91,10 +98,6 @@ describe('version-middleware', () => {
 
     it('loads extra stuff from build.json', done => {
       let result
-      // normalize transient properties
-      const normalize = R.evolve({
-        started: s => s.replace(/./g, 'x')
-      })
       const send = info => {
         result = normalize(info)
       }
@@ -109,5 +112,27 @@ describe('version-middleware', () => {
     afterEach(() => {
       sandbox.restore()
     })
+  })
+})
+
+describe('demo server', () => {
+  const middleware = require('.')
+  const request = require('supertest')
+  const express = require('express')
+
+  const app = express()
+  app.get('/version', middleware())
+
+  it('returns version with no caching header', () => {
+    return request(app)
+      .get('/version')
+      .expect(200)
+      .then(response => {
+        const headers = R.pick(['cache-control', 'content-type'])(
+          response.headers
+        )
+        snapshot(headers)
+        snapshot(normalize(response.body))
+      })
   })
 })
