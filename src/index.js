@@ -68,13 +68,14 @@ function versionResponse (req, res) {
     return sendVersionResponse(req)
   }
   if (is.fn(res.setHeader)) {
-    res.setHeader('Cache-Control', [
+    const noCaching = [
       'max-age=0',
       'no-cache',
       'no-store',
       'no-transform',
       'must-revalidate'
-    ])
+    ].join(', ')
+    res.setHeader('Cache-Control', noCaching)
   }
   const sendResult = res.send.bind(res)
   return sendVersionResponse(sendResult)
