@@ -3,7 +3,7 @@
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const sinon = require('sinon')
-const {join} = require('path')
+const { join } = require('path')
 const fs = require('fs')
 const R = require('ramda')
 const snapshot = require('snap-shot-it')
@@ -21,7 +21,7 @@ describe('version-middleware', () => {
     la(is.fn(version))
   })
 
-  it('returns an object', (done) => {
+  it('returns an object', done => {
     const version = middleware()
     const response = {
       send: data => {
@@ -32,7 +32,7 @@ describe('version-middleware', () => {
     version(null, response)
   })
 
-  it('returns npm version and git SHA', (done) => {
+  it('returns npm version and git SHA', done => {
     const version = middleware()
     const response = {
       send: data => {
@@ -44,7 +44,7 @@ describe('version-middleware', () => {
     version(null, response)
   })
 
-  it('returns date service started', (done) => {
+  it('returns date service started', done => {
     const version = middleware()
     const response = {
       send: data => {
@@ -55,9 +55,9 @@ describe('version-middleware', () => {
     version(null, response)
   })
 
-  it('can call supplied send version instead of using response', (done) => {
+  it('can call supplied send version instead of using response', done => {
     let result
-    const send = (info) => {
+    const send = info => {
       result = info
     }
     const version = middleware()
@@ -79,17 +79,23 @@ describe('version-middleware', () => {
     }
 
     beforeEach(() => {
-      sandbox.stub(fs, 'existsSync').withArgs(buildFilename).returns(true)
-      sandbox.stub(fs, 'readFileSync').withArgs(buildFilename, 'utf8').returns(JSON.stringify(build))
+      sandbox
+        .stub(fs, 'existsSync')
+        .withArgs(buildFilename)
+        .returns(true)
+      sandbox
+        .stub(fs, 'readFileSync')
+        .withArgs(buildFilename, 'utf8')
+        .returns(JSON.stringify(build))
     })
 
-    it('loads extra stuff from build.json', (done) => {
+    it('loads extra stuff from build.json', done => {
       let result
       // normalize transient properties
       const normalize = R.evolve({
-        started: (s) => s.replace(/./g, 'x')
+        started: s => s.replace(/./g, 'x')
       })
-      const send = (info) => {
+      const send = info => {
         result = normalize(info)
       }
       const version = middleware()

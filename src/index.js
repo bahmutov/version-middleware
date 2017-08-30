@@ -4,28 +4,34 @@ const join = require('path').join
 const fs = require('fs')
 const la = require('lazy-ass')
 const is = require('check-more-types')
-const started = (new Date()).toISOString()
+const started = new Date().toISOString()
 
 function findBuiltInfo () {
   // assuming package.json is in the same folder
   const lastCommit = require('last-commit')
   const packageFilename = join(process.cwd(), 'package.json')
   const pkg = require(packageFilename)
-  const combineShaAndVersion = git =>
-    ({version: pkg.version, git})
+  const combineShaAndVersion = git => ({ version: pkg.version, git })
 
-  return lastCommit()
-    .then(combineShaAndVersion)
+  return lastCommit().then(combineShaAndVersion)
 }
 
 const buildFilename = join(process.cwd(), 'build.json')
 
 function loadBuildFile () {
   const data = JSON.parse(fs.readFileSync(buildFilename, 'utf8'))
-  la(is.unemptyString(data.version),
-    buildFilename, 'is missing "version" property', data)
-  la(is.commitId(data.id),
-    buildFilename, 'is missing "id" property with Git sha', data)
+  la(
+    is.unemptyString(data.version),
+    buildFilename,
+    'is missing "version" property',
+    data
+  )
+  la(
+    is.commitId(data.id),
+    buildFilename,
+    'is missing "id" property with Git sha',
+    data
+  )
   const renamed = {
     version: data.version,
     git: data.id.trim().substr(0, 7)
@@ -55,8 +61,7 @@ function sendVersionResponse (sendResult) {
     .then(sendResult)
 }
 
-const isSendArgument = (args) =>
-  args.length === 1 && is.fn(args[0])
+const isSendArgument = args => args.length === 1 && is.fn(args[0])
 
 function versionResponse (req, res) {
   if (isSendArgument(arguments)) {
