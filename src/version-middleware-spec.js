@@ -74,7 +74,8 @@ describe('version-middleware', () => {
     const buildFilename = join(process.cwd(), 'build.json')
     const build = {
       version: '1.2.3',
-      id: '330556f921702ddf207f6e2fa932e3fe5d08fb38'
+      id: '330556f921702ddf207f6e2fa932e3fe5d08fb38',
+      foo: 'is extra data'
     }
 
     beforeEach(() => {
