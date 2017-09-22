@@ -79,7 +79,7 @@
     "prettier-standard": "6.0.0",
     "ramda": "0.24.1",
     "semantic-release": "^6.3.6",
-    "sinon": "3.2.1",
+    "sinon": "3.3.0",
     "snap-shot-it": "2.2.0",
     "standard": "10.0.3",
     "supertest": "3.0.0"
